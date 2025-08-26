@@ -10,19 +10,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (!file_exists('disciplinas.txt')) {
         // Cria o arquivo e escreve o cabeçalho
-        $arq_disciplina = fopen('disciplinas.txt','w') or die("erro ao criar arquivo");
-        $linha = "nome;sigla;carga;\n";
-        fwrite($arq_disciplina, $linha);
-        fclose($arq_disciplina);
+        $writer = fopen('disciplinas.txt','w') or die("erro ao criar arquivo");
+        fputcsv($writer, ['Nome', 'Sigla', 'Carga'], ";");
+        fclose($writer);
 
         $msg = "Arquivo criado e cabeçalho adicionado!<br>";
     }
 
     // Sempre adiciona a disciplina no final
-    $arq_disciplina = fopen('disciplinas.txt','a') or die("erro ao escrever no arquivo");
-    $linha = $nome . ";" . $sigla . ";" . $carga . "\n";
-    fwrite($arq_disciplina, $linha);
-    fclose($arq_disciplina);
+    $writer = fopen('disciplinas.txt','a') or die("erro ao escrever no arquivo");
+    $linha = [$nome,$sigla,$carga];
+    fputcsv($writer, $linha,";");
+    fclose($writer);
 
     $msg .= "Disciplina registrada com sucesso!";
 }
@@ -45,6 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <input type="text" id="cargaDisc" name="cargaDisc"><br>
 
         <input type="submit" value="Incluir">
+    </form>
+    <form action="listagem.php">
+        <input type="submit" value="Listar">
     </form>
 
     <p><?php echo $msg; ?></p>
