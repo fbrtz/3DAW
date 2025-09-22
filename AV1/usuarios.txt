@@ -1,0 +1,3 @@
+id;usuario;senha;admin
+0;faaa;123;nao
+1;aluno;123;nao

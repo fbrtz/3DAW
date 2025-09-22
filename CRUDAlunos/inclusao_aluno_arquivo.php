@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $linhas = file($arquivoPath);
         if (trim($linhas[0]) != trim($cabecalho)) {
             array_unshift($linhas, $cabecalho);
-            file_put_contents($arquivoPath, implode("", $linhas));
+            file_put_contents($arquivoPath, implode(";", $linhas));
         }
     }
 

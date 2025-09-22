@@ -1,0 +1,11 @@
+Número;Questão;Resposta
+1;Qual é a capital do Brasil?;A
+2;Explique brevemente o que é PHP;a
+3;Qual é o resultado de 2 + 2?;B
+4;Descreva o ciclo da água;d
+5;Qual destes é um animal mamífero?;B
+6;O que significa HTML?;d
+7;Qual é a cor do céu em um dia limpo?;C
+8;Explique a diferença entre GET e POST em formulários;dd
+9;Qual destes é um planeta do sistema solar?;E
+10;Descreva seu animal favorito;a
