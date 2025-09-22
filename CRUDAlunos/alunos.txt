@@ -1,0 +1,3 @@
+matricula;nome;email;data_nascimento
+123;fabio;fabio.ortiz.fo6@gmail.com;2004-07-11
+1234;fabio;fabio.ortiz.fo5@gmail.com;2004-07-11
