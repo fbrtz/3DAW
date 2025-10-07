@@ -21,9 +21,9 @@
                 $loginValido = true;
 
                 if(strtolower($admin) == "sim"){
-                    header("Location: listar_perguntas.php");
+                    header("Location: ../menu.html");
                 } else {
-                    header("Location: exibir_prova.php");
+                    header("Location: ../menualun.html");
                 }
                 exit;
             }

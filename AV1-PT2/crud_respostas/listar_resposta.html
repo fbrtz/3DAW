@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Respostas</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .loading { color: #666; font-style: italic; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h2>Resumo das Respostas</h2>
+    
+    <div id="loading" class="loading">Carregando respostas...</div>
+    <div id="error" class="error" style="display: none;"></div>
+    
+    <div id="respostas-container" style="display: none;">
+        <table id="tabela-respostas">
+            <thead>
+                <tr>
+                    <th>Número</th>
+                    <th>Questão</th>
+                    <th>Resposta</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="corpo-tabela">
+            </tbody>
+        </table>
+        
+        <br>
+        <button onclick="entregarProva()">Entregar Prova</button>
+        <button onclick="menu()">Voltar para menu</button>
+        <button onclick="sair()">Sair</button>
+
+    </div>
+
+    <script>
+        function carregarRespostas() {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'listar_respostas.php', true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    document.getElementById('loading').style.display = 'none';
+                    
+                    if (xhr.status === 200) {
+                        try {
+                            const resposta = JSON.parse(xhr.responseText);
+                            
+                            if (resposta.success) {
+                                exibirRespostas(resposta.data);
+                            } else {
+                                mostrarErro('Erro ao carregar respostas');
+                            }
+                        } catch (e) {
+                            mostrarErro('Erro ao processar resposta do servidor');
+                        }
+                    } else {
+                        mostrarErro('Erro na requisição: ' + xhr.status);
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function exibirRespostas(respostas) {
+            const corpoTabela = document.getElementById('corpo-tabela');
+            corpoTabela.innerHTML = '';
+            
+            if (respostas.length === 0) {
+                corpoTabela.innerHTML = '<tr><td colspan="4">Nenhuma resposta encontrada</td></tr>';
+            } else {
+                respostas.forEach(resposta => {
+                    const linha = document.createElement('tr');
+                    linha.innerHTML = `
+                        <td>${escapeHtml(resposta.Número)}</td>
+                        <td>${escapeHtml(resposta.Questão)}</td>
+                        <td>${escapeHtml(resposta.Resposta)}</td>
+                        <td>
+                            <button onclick="editarResposta(${resposta.Número})">Alterar</button>
+                        </td>
+                    `;
+                    corpoTabela.appendChild(linha);
+                });
+            }
+            
+            document.getElementById('respostas-container').style.display = 'block';
+        }
+
+        function editarResposta(id) {
+            window.location.href = `editar_resposta.html?id=${id}`;
+        }
+
+        function entregarProva() {
+            window.location.href = '../fim.html';
+        }
+
+        function sair() {
+            window.location.href = '../login_cadastro/login.php';
+        }
+
+        function menu() {
+            window.location.href = '../menualun.html';
+        }
+
+
+
+        function mostrarErro(mensagem) {
+            document.getElementById('error').textContent = mensagem;
+            document.getElementById('error').style.display = 'block';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Carrega as respostas quando a página é carregada
+        document.addEventListener('DOMContentLoaded', carregarRespostas);
+    </script>
+</body>
+</html>
