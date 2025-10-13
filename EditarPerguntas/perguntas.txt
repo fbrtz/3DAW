@@ -1,0 +1,11 @@
+Questão;alternativa1;alternativa2;alternativa3;alternativa4;alternativa5;gabarito
+Qual é a capital do Brasil?;Ops;Rio de Janeiro;São Paulo;Salvador;Fortaleza
+Explique brevemente o que é PHP;;;;;
+Qual é o resultado de 2 + 2?;2;3;4;5;6;4
+Descreva o ciclo da água;;;;;
+Qual destes é um animal mamífero?;Crocodilo;Gato;Avestruz;Tubarão;Cobra;Gato
+O que significa HTML?;;;;;
+Qual é a cor do céu em um dia limpo?;Azul;Verde;Vermelho;Amarelo;Roxo;Azul
+Explique a diferença entre GET e POST em formulários;;;;;
+Qual destes é um planeta do sistema solar?;Marte;Lua;Sol;Cometa;Asteroide;Marte
+Descreva seu animal favorito;;;;;

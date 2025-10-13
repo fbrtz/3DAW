@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Editar Pergunta</title>
+<style>
+  textarea { width: 100%; max-width: 600px; }
+  label { font-weight: bold; }
+  button { margin-top: 10px; }
+  #msg { margin-top: 15px; font-weight: bold; color: green; }
+</style>
+</head>
+<body>
+
+<h2>Edição de questão</h2>
+
+<form id="formPergunta">
+    <input type="hidden" name="id" id="id">
+    <label>Pergunta:</label><br>
+    <textarea name="pergunta" id="pergunta" rows="5" required></textarea><br><br>
+
+    <label>Gabarito:</label><br>
+    <textarea name="gabarito" id="gabarito" rows="2"></textarea><br><br>
+
+    <label>Alternativa A:</label><br>
+    <textarea name="alternativa1" id="alternativa1" rows="2"></textarea><br><br>
+
+    <label>Alternativa B:</label><br>
+    <textarea name="alternativa2" id="alternativa2" rows="2"></textarea><br><br>
+
+    <label>Alternativa C:</label><br>
+    <textarea name="alternativa3" id="alternativa3" rows="2"></textarea><br><br>
+
+    <label>Alternativa D:</label><br>
+    <textarea name="alternativa4" id="alternativa4" rows="2"></textarea><br><br>
+
+    <label>Alternativa E:</label><br>
+    <textarea name="alternativa5" id="alternativa5" rows="2"></textarea><br><br>
+
+    <button type="submit">Salvar</button>
+</form>
+
+<div id="msg"></div>
+
+<script>
+
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+const id = getQueryParam("id");
+if (!id) {
+    alert("ID da pergunta não fornecido!");
+} else {
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "buscar_pergunta.php?id=" + id, true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const res = JSON.parse(xhr.responseText);
+            if (res.success) {
+                document.getElementById("id").value = res.id;
+                document.getElementById("pergunta").value = res.pergunta;
+                document.getElementById("alternativa1").value = res.alternativa1;
+                document.getElementById("alternativa2").value = res.alternativa2;
+                document.getElementById("alternativa3").value = res.alternativa3;
+                document.getElementById("alternativa4").value = res.alternativa4;
+                document.getElementById("alternativa5").value = res.alternativa5;
+                document.getElementById("gabarito").value = res.gabarito;
+            } else {
+                alert(res.message);
+            }
+        }
+    };
+    xhr.send();
+}
+
+document.getElementById("formPergunta").addEventListener("submit", function(e) {
+    e.preventDefault();
+    var formData = new FormData(this);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "atualizar_pergunta.php", true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const res = JSON.parse(xhr.responseText);
+            const msgDiv = document.getElementById("msg");
+            msgDiv.textContent = res.message;
+
+            if (res.success) {
+                // Redireciona após 5 segundos
+                setTimeout(() => {
+                    window.location.href = "listar_perguntas.html";
+                }, 5000);
+            }
+        }
+    };
+    xhr.send(formData);
+});
+</script>
+
+</body>
+</html>
