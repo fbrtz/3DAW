@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Lista de Perguntas</title>
+  <style>
+    table { border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #000; padding: 5px; text-align: left; }
+    button { margin: 5px; }
+  </style>
+</head>
+<body>
+  <h2>Lista de Perguntas</h2>
+  <a href="add_pergunta.html"><button>Adicionar nova pergunta</button></a>
+  <a href="../menu.html"><button>Voltar para o Menu</button></a>
+  <a href="../login_cadastro/login.php"><button>Sair</button></a>
+
+  <div id="tabela-container"></div>
+
+  <script>
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'listar_perguntas.php', true);
+    xhr.onload = function() {
+      var result = JSON.parse(xhr.responseText);
+      var container = document.getElementById('tabela-container');
+
+      var tabela = '<table><tr>';
+      result.headers.forEach(h => tabela += `<th>${h}</th>`);
+      tabela += '<th>Ações</th></tr>';
+
+      result.data.forEach(item => {
+        tabela += '<tr>';
+        result.headers.forEach(h => tabela += `<td>${item[h]}</td>`);
+        tabela += `
+          <td>
+            <form action="editar_pergunta.html" method="GET" style="display:inline">
+              <input type="hidden" name="id" value="${item.id}">
+              <button type="submit">Alterar</button>
+            </form>
+            <form action="excluir_pergunta.php" method="GET" style="display:inline" onsubmit="return confirm('Deseja realmente excluir?');">
+              <input type="hidden" name="id" value="${item.id}">
+              <button type="submit">Excluir</button>
+            </form>
+          </td>
+        </tr>`;
+      });
+
+      tabela += '</table>';
+      container.innerHTML = tabela;
+    };
+    xhr.send();
+  </script>
+</body>
+</html>

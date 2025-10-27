@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Resposta</title>
+    <style>
+        .container { max-width: 600px; margin: 20px auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        textarea, input[type="text"] { width: 100%; padding: 8px; }
+        .loading { color: #666; font-style: italic; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button onclick="voltar()">← Voltar</button>
+        <h2>Editar Resposta</h2>
+        
+        <div id="loading" class="loading">Carregando resposta...</div>
+        <div id="error" class="error" style="display: none;"></div>
+        <div id="success" class="success" style="display: none;"></div>
+        
+        <form id="form-editar" style="display: none;">
+            <div class="form-group">
+                <label>Número da Questão:</label>
+                <input type="text" id="numero" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label>Pergunta:</label>
+                <textarea id="pergunta" rows="3" readonly></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="resposta">Resposta:</label>
+                <textarea id="resposta" name="resposta" rows="5" placeholder="Digite sua resposta aqui..."></textarea>
+            </div>
+            
+            <button type="button" onclick="salvarResposta()">Salvar Alterações</button>
+            <button type="button" onclick="voltar()">Cancelar</button>
+        </form>
+    </div>
+
+    <script>
+        function obterParametroUrl(nome) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(nome);
+        }
+
+        function carregarResposta() {
+            const id = obterParametroUrl('id');
+            
+            if (!id) {
+                mostrarErro('ID da resposta não especificado');
+                return;
+            }
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', `buscar_resposta.php?id=${id}`, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    document.getElementById('loading').style.display = 'none';
+                    
+                    if (xhr.status === 200) {
+                        try {
+                            const resposta = JSON.parse(xhr.responseText);
+                            
+                            if (resposta.success) {
+                                preencherFormulario(resposta.data);
+                            } else {
+                                mostrarErro(resposta.message || 'Resposta não encontrada');
+                            }
+                        } catch (e) {
+                            mostrarErro('Erro ao processar resposta do servidor');
+                        }
+                    } else {
+                        mostrarErro('Erro na requisição: ' + xhr.status);
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function preencherFormulario(dados) {
+            document.getElementById('numero').value = dados.numero;
+            document.getElementById('pergunta').value = dados.questao;
+            document.getElementById('resposta').value = dados.resposta;
+            document.getElementById('form-editar').style.display = 'block';
+        }
+
+        function salvarResposta() {
+            const numero = document.getElementById('numero').value;
+            const pergunta = document.getElementById('pergunta').value;
+            const resposta = document.getElementById('resposta').value;
+            
+            if (!resposta.trim()) {
+                mostrarErro('Por favor, preencha a resposta');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('numquestao', numero);
+            formData.append('pergunta', pergunta);
+            formData.append('resposta', resposta);
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'salvar_resposta.php', true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        try {
+                            const resposta = JSON.parse(xhr.responseText);
+                            
+                            if (resposta.success) {
+                                mostrarSucesso('Resposta salva com sucesso!');
+                                setTimeout(voltar, 1000);
+                            } else {
+                                mostrarErro(resposta.message || 'Erro ao salvar resposta');
+                            }
+                        } catch (e) {
+                            mostrarErro('Erro ao processar resposta do servidor');
+                        }
+                    } else {
+                        mostrarErro('Erro na requisição: ' + xhr.status);
+                    }
+                }
+            };
+            xhr.send(formData);
+        }
+
+        function voltar() {
+            window.location.href = 'listar_resposta.html';
+        }
+
+        function mostrarErro(mensagem) {
+            document.getElementById('error').textContent = mensagem;
+            document.getElementById('error').style.display = 'block';
+            document.getElementById('success').style.display = 'none';
+        }
+
+        function mostrarSucesso(mensagem) {
+            document.getElementById('success').textContent = mensagem;
+            document.getElementById('success').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+        }
+
+        // Carrega a resposta quando a página é carregada
+        document.addEventListener('DOMContentLoaded', carregarResposta);
+    </script>
+</body>
+</html>
