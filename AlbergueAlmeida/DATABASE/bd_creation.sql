@@ -30,6 +30,9 @@ CREATE TABLE IF NOT EXISTS quartos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(200) NOT NULL,
     descricao TEXT,
+    img0 TEXT NOT NULL,
+    img1 TEXT,
+    img2 TEXT,
     total_vagas INT NOT NULL,
     preco_base DECIMAL(10,2) NOT NULL,
     criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -119,20 +122,13 @@ INSERT INTO usuarios (nome, email, senha, funcao) VALUES
 ('Maria Santos', 'maria@example.com', '123', 'cliente');
 
 
-INSERT INTO quartos (titulo, descricao, total_vagas, preco_base) VALUES
-('Q101','Quarto confortável',4,100.00);
+INSERT INTO quartos (titulo, descricao, total_vagas, preco_base,img0,img1) VALUES
+('Q101','Quarto confortável',4,100.00,'https://d2iwr6cbo83dtj.cloudfront.net/2025/03/biblioteca-escondida-abriga-encontros-leitura-ape-estudio-elmor-credito-bia-nauiack-39.jpg','https://quartosetc.com.br/wp-content/uploads/2022/02/KAREN_PISACANE1-scaled-e1645810950545.jpg');
 
-INSERT INTO imagem (caminho) VALUES
-('https://d2iwr6cbo83dtj.cloudfront.net/2025/03/biblioteca-escondida-abriga-encontros-leitura-ape-estudio-elmor-credito-bia-nauiack-39.jpg'),
-('https://quartosetc.com.br/wp-content/uploads/2022/02/KAREN_PISACANE1-scaled-e1645810950545.jpg');
-
-INSERT INTO quarto_imagem (id_quarto, id_imagem, ordem) VALUES
-(1,1,1);
-INSERT INTO quarto_imagem (id_quarto,id_imagem, ordem) VALUES
-(1,2,2);
 
 INSERT INTO vagas (quarto_id, nome, adicional) VALUES
 (1,'Beliche Superior',30.00);
+
 
 INSERT INTO caracteristicas (nome, tipo) VALUES 
 ('Wi-Fi', 'ambos'),
@@ -140,3 +136,9 @@ INSERT INTO caracteristicas (nome, tipo) VALUES
 ('Projetor', 'quarto'),
 ('Tomadas', 'vaga'),
 ('Iluminação Natural', 'vaga');
+
+INSERT INTO caracteristicas_quartos (quarto_id,caracteristica_id) VALUES 
+(1,1);
+
+INSERT INTO caracteristicas_vagas (vaga_id,caracteristica_id) VALUES 
+(1,5);
