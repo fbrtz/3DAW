@@ -41,9 +41,9 @@ window.onload = () => {
 document.getElementById("form-editar").onsubmit = function (e) {
     e.preventDefault();
 
-    // 💥 Validação da imagem obrigatória
+    // Validação da imagem obrigatória
     if (document.getElementById("img0").value.trim() === "") {
-        alert("A imagem 0 é obrigatória!");
+        alert("A imagem 1 é obrigatória!");
         return;
     }
 
